@@ -112,12 +112,12 @@ get_latest_frp_version() {
 }
 
 clean() {
-	if [[ -d "./${PACKAGE_NAME}" ]]; then
-		rm -rf "./${PACKAGE_NAME}"
+	if [[ -d "/tmp/${PACKAGE_NAME}" ]]; then
+		sudo rm -rf "/tmp/${PACKAGE_NAME}"
 	fi
 
-	if [[ -f "./${BINARY_PACKAGE_NAME}" ]]; then
-		rm -rf "./${BINARY_PACKAGE_NAME}"
+	if [[ -f "/tmp/${BINARY_PACKAGE_NAME}" ]]; then
+		sudo rm -rf "/tmp/${BINARY_PACKAGE_NAME}"
 	fi
 }
 
@@ -148,6 +148,10 @@ install() {
 	cd "/tmp/${PACKAGE_NAME}" || exit 1
 
 	sudo cp -f "${PACKAGE}" /usr/bin/"${PACKAGE}"
+
+	if [[ ! -d "/etc/frp" ]]; then
+		sudo mkdir "/etc/frp"
+	fi
 
 	if [[ ! -f "/etc/frp/${PACKAGE}.ini" ]]; then
 		sudo cp "${PACKAGE}".ini /etc/frp/"${PACKAGE}".ini

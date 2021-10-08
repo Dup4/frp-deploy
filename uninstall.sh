@@ -38,8 +38,8 @@ uninstall() {
 		sudo rm -rf /lib/systemd/system/"${PACKAGE}".service
 	fi
 
-	if [[ -n "$(which ${PACKAGE})" ]]; then
-		sudo rm -rf "/usr/bin/${PACKAGE:?}"
+	if [[ -n "$(which "${PACKAGE}")" ]]; then
+		sudo rm -rf "$(which "${PACKAGE}")"
 	fi
 
 	INFO "uninstall ${PACKAGE} success"
