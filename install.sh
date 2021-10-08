@@ -153,6 +153,8 @@ check_exist_frp() {
 download_frp() {
 	OS_PLATFORM="linux"
 
+	DOWNLOAD_URL="https://${GITHUB_HOST}/fatedier/frp/releases/download"
+
 	PACKAGE_NAME="frp_${FRP_VERSION}_${OS_PLATFORM}_${ARCHS}"
 	BINARY_PACKAGE_NAME="${PACKAGE_NAME}.tar.gz"
 	BINARY_PACKAGE_DOWNLOAD_URL="${DOWNLOAD_URL}/v${FRP_VERSION}/${BINARY_PACKAGE_NAME}"
@@ -198,7 +200,6 @@ install() {
 }
 
 GITHUB_HOST="github.com"
-DOWNLOAD_URL="https://${GITHUB_HOST}/fatedier/frp/releases/download"
 FRP_VERSION="LATEST"
 ALL_Y='n'
 
