@@ -39,7 +39,7 @@ uninstall() {
 
 	BINARY_PACKAGE="$(which "${PACKAGE}")"
 
-	INFO "the version of ${PACKAGE} is $(${PACKAGE} -v)"
+	INFO "the version of ${PACKAGE} is $(${BINARY_PACKAGE} -v)"
 
 	sudo systemctl stop "${PACKAGE}"
 	sudo systemctl disable "${PACKAGE}"
