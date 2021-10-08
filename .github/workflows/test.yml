@@ -24,4 +24,4 @@ jobs:
 
       - name: Unit Test
         run: |
-            curl https://raw.githubusercontent.com/bach-sh/bach/master/run-tests.sh | bash
+            ./run-tests.sh

@@ -6,8 +6,10 @@ if [[ ! -f "${TOP_DIR}/../bach.sh" ]]; then
 	wget https://raw.githubusercontent.com/bach-sh/bach/master/bach.sh -O "${TOP_DIR}/../bach.sh"
 fi
 
+set -euo pipefail
+
 # shellcheck disable=SC1091
-source "${TOP_DIR}/../bach.sh"
+source "${TOP_DIR}"/../bach.sh
 
 @mock $EUID === "0"
 
