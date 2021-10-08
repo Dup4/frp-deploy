@@ -57,14 +57,30 @@ check_os() {
 check_os_bit() {
 	ARCHS=""
 
-	if [[ $(getconf WORD_BIT) = '32' && $(getconf LONG_BIT) = '64' ]]; then
-		is_64bit='y'
-		ARCHS="amd64"
-	else
-		# shellcheck disable=SC2034
-		is_64bit='n'
+	case "$(uname -i)" in
+	x86)
 		ARCHS="386"
-	fi
+		;;
+	x86_64)
+		ARCHS="amd64"
+		;;
+	aarch | aarch32)
+		ARCHS="arm"
+		;;
+	aarch64)
+		ARCHS="arm64"
+		;;
+	mips)
+		ARCHS="mips"
+		;;
+	mips64)
+		ARCHS="mips64"
+		;;
+	*)
+		ERROR "$(uname -i) is unsupport"
+		exit 1
+		;;
+	esac
 }
 
 # Get version
