@@ -107,8 +107,10 @@ check_wget() {
 }
 
 get_latest_frp_version() {
+	local FRP_LATEST_VERSION
 	FRP_LATEST_VERSION=$(wget -qO- -t1 -T2 "https://api.github.com/repos/fatedier/frp/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
-	INFO "frp latest version: ${FRP_LATEST_VERSION}"
+
+	echo "${FRP_LATEST_VERSION:1}"
 }
 
 clean() {
@@ -121,12 +123,39 @@ clean() {
 	fi
 }
 
+check_exist_frp() {
+	local PACKAGE="${1}"
+
+	if [[ -n "$(which "${PACKAGE}")" ]]; then
+		local FRP_NOW_VERSION
+		FRP_NOW_VERSION="$(${PACKAGE} -v)"
+
+		INFO "${PACKAGE} already exists, the version is v${FRP_NOW_VERSION}"
+		INFO "the expected version is v${FRP_VERSION}"
+
+		if [[ "${FRP_NOW_VERSION}" = "${FRP_VERSION}" ]]; then
+			INFO "The existing version is consistent with the expected version, the installation program will exit"
+			exit 0
+		fi
+
+		local IS_UPDATE
+		IS_UPDATE='n'
+
+		if [[ "${ALL_Y}" = 'n' ]]; then
+			read -e -n 1 -r -p "do you need to update to the expected version? (y/n)" IS_UPDATE
+			if [[ "${IS_UPDATE}" = 'n' ]]; then
+				exit 0
+			fi
+		fi
+	fi
+}
+
 download_frp() {
 	OS_PLATFORM="linux"
 
-	PACKAGE_NAME="frp_${FRP_LATEST_VERSION:1}_${OS_PLATFORM}_${ARCHS}"
+	PACKAGE_NAME="frp_${FRP_VERSION:1}_${OS_PLATFORM}_${ARCHS}"
 	BINARY_PACKAGE_NAME="${PACKAGE_NAME}.tar.gz"
-	BINARY_PACKAGE_DOWNLOAD_URL="${DOWNLOAD_URL}/${FRP_LATEST_VERSION}/${BINARY_PACKAGE_NAME}"
+	BINARY_PACKAGE_DOWNLOAD_URL="${DOWNLOAD_URL}/v${FRP_LATEST_VERSION}/${BINARY_PACKAGE_NAME}"
 
 	clean
 
@@ -143,7 +172,7 @@ download_frp() {
 }
 
 install() {
-	PACKAGE="${1}"
+	local PACKAGE="${1}"
 
 	cd "/tmp/${PACKAGE_NAME}" || exit 1
 
@@ -161,6 +190,7 @@ install() {
 	sudo systemctl daemon-reload
 	sudo systemctl enable "${PACKAGE}"
 	sudo systemctl start "${PACKAGE}"
+	sudo systemctl status "${PACKAGE}"
 
 	INFO "install ${PACKAGE} success"
 	INFO "you can modify ${PACKAGE}.ini from /etc/frp/${PACKAGE}.ini"
@@ -169,11 +199,19 @@ install() {
 
 GITHUB_HOST="github.com"
 DOWNLOAD_URL="https://${GITHUB_HOST}/fatedier/frp/releases/download"
+FRP_VERSION="LATEST"
+ALL_Y='n'
 
-while getopts ":p:i:" o; do
+while getopts ":p:v:y:i:" o; do
 	case "${o}" in
 	p)
 		GITHUB_HOST=${OPTARG}
+		;;
+	v)
+		FRP_VERSION=${OPTARG}
+		;;
+	y)
+		ALL_Y='y'
 		;;
 	i | *)
 		i=${OPTARG}
@@ -197,7 +235,12 @@ check_os_bit
 
 check_wget
 
-get_latest_frp_version
+if [[ "${FRP_VERSION}" = "LATEST" ]]; then
+	FRP_VERSION=$(get_latest_frp_version)
+fi
+
+check_exist_frp "${i}"
+
 download_frp
 
 install "${i}"

@@ -30,6 +30,15 @@ check_root() {
 uninstall() {
 	PACKAGE="${1}"
 
+	if [[ -z "$(which "${PACKAGE}")" ]]; then
+		INFO "${PACKAGE} is not installed, the uninstaller will exit"
+		exit 0
+	fi
+
+	BINARY_PACKAGE="$(which "${PACKAGE}")"
+
+	INFO "the version of ${PACKAGE} is $(${BINARY_PACKAGE} -v)"
+
 	sudo systemctl stop "${PACKAGE}"
 	sudo systemctl disable "${PACKAGE}"
 	sudo systemctl daemon-reload
@@ -38,15 +47,38 @@ uninstall() {
 		sudo rm -rf /lib/systemd/system/"${PACKAGE}".service
 	fi
 
-	if [[ -n "$(which "${PACKAGE}")" ]]; then
-		sudo rm -rf "$(which "${PACKAGE}")"
+	sudo rm -rf "${BINARY_PACKAGE}"
+
+	local IS_DELETE_CONFIGURATION_FILE
+	IS_DELETE_CONFIGURATION_FILE='n'
+
+	if [[ "${ALL_Y}" = 'n' ]]; then
+		read -e -n 1 -r -p "need to delete the configuration file? (y/n)" IS_DELETE_CONFIGURATION_FILE
+	fi
+
+	if [[ "${ALL_Y}" = 'y' || "${IS_DELETE_CONFIGURATION_FILE}" = 'y' ]]; then
+		local CONFIGURATION_PATH="/etc/frp"
+		local CONFIGURATION_FILE_PATH="${CONFIGURATION_PATH}/${PACKAGE}.ini"
+
+		if [[ -f "${CONFIGURATION_FILE_PATH}" ]]; then
+			rm -rf "${CONFIGURATION_FILE_PATH}"
+		fi
+
+		if [[ -d "${CONFIGURATION_PATH}" ]]; then
+			rm -rf "${CONFIGURATION_PATH}"
+		fi
 	fi
 
 	INFO "uninstall ${PACKAGE} success"
 }
 
-while getopts ":i:" o; do
+ALL_Y='n'
+
+while getopts ":i:y:" o; do
 	case "${o}" in
+	y)
+		ALL_Y='y'
+		;;
 	i | *)
 		i=${OPTARG}
 		;;
