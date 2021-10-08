@@ -26,7 +26,10 @@ cd "${TOP_DIR}" || exit 1
 for file in tests/*_test.sh; do
 	INFO "Running $file"
 
-	if bash "${file}"; then
+	bash "${file}"
+
+	# shellcheck disable=SC2181
+	if [ $? -ne 0 ]; then
 		ERROR "Exec $file failed"
 		exit 1
 	fi
