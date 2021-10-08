@@ -19,6 +19,15 @@ function ERROR() {
 	echo -e "\033[0;31m$(get_now_time) [ERROR]: $*\033[0m"
 }
 
+# Check if user is root
+check_root() {
+	sudo su
+	if [[ $EUID -ne 0 ]]; then
+		ERROR "${ERROR_MSG_MUST_ROOT}"
+		exit 1
+	fi
+}
+
 uninstall_frpc() {
 	sudo systemctl stop frpc
 	sudo systemctl disable frpc
@@ -54,6 +63,8 @@ done
 if [[ ${i} != "frpc" && ${i} != "frps" ]]; then
 	ERROR "${ERROR_MSG_SUPPORT_INSTALL_OPTS}"
 fi
+
+check_root
 
 if [[ ${i} == "frpc" ]]; then
 	uninstall_frpc

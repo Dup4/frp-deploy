@@ -32,6 +32,7 @@ function ERROR() {
 
 # Check if user is root
 check_root() {
+	sudo su
 	if [[ $EUID -ne 0 ]]; then
 		ERROR "${ERROR_MSG_MUST_ROOT}"
 		exit 1
@@ -168,7 +169,7 @@ install_frps() {
 		cp frps.ini /etc/frp/frps.ini
 	fi
 
-	cp -f ./systemd/frps.service /lib/systemd/system/frps.service
+	sudo cp -f ./systemd/frps.service /lib/systemd/system/frps.service
 	sudo systemctl daemon-reload
 	sudo systemctl enable frps
 	sudo systemctl start frps
