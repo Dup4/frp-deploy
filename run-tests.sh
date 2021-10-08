@@ -5,7 +5,7 @@ set -ue
 TOP_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
 function get_now_time() {
-	if [[ "$(uname)" == "${OS_MACOS}" ]]; then
+	if [[ "$(uname)" == "Darwin" ]]; then
 		NOW_TIME=$(date)
 	else
 		# https://unix.stackexchange.com/questions/120484/what-is-a-standard-command-for-printing-a-date-in-rfc-3339-format

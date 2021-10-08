@@ -4,7 +4,6 @@ OS_CENTOS="CentOS"
 OS_DEBIAN="Debian"
 OS_UBUNTU="Ubuntu"
 OS_FEDORA="Fedora"
-OS_MACOS="Darwin"
 
 ERROR_MSG_MUST_ROOT="This script must be run as root!"
 ERROR_MSG_SUPPORT_OS="This script only supports CentOS 6,7 or Debian or Ubuntu or Fedor!"
@@ -13,7 +12,7 @@ ERROR_MSG_DOWNLOAD_FAILED="download frp failed."
 ERROR_MSG_SUPPORT_INSTALL_OPTS="only support frpc or frps."
 
 function get_now_time() {
-	if [[ "$(uname)" == "${OS_MACOS}" ]]; then
+	if [[ "$(uname)" == "Darwin" ]]; then
 		NOW_TIME=$(date)
 	else
 		# https://unix.stackexchange.com/questions/120484/what-is-a-standard-command-for-printing-a-date-in-rfc-3339-format
