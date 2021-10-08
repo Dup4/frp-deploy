@@ -22,10 +22,6 @@ jobs:
       - name: Checkout codebase
         uses: actions/checkout@v2
 
-      - name: Install deps
-        run: |
-          sudo apt-get install wget -y
-
       - name: Unit Test
         run: |
             bash ./run-tests.sh
