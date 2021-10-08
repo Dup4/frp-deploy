@@ -146,7 +146,7 @@ install() {
 
 	cd "/tmp/${PACKAGE_NAME}" || exit 1
 
-	cp -f frps /usr/bin/"${PACKAGE}"
+	cp -f "${PACKAGE}" /usr/bin/"${PACKAGE}"
 
 	if [[ ! -f "/etc/frp/${PACKAGE}.ini" ]]; then
 		cp "${PACKAGE}".ini /etc/frp/"${PACKAGE}".ini
