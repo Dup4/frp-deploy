@@ -138,12 +138,12 @@ check_exist_frp() {
 			exit 0
 		fi
 
-		local IS_UPDATE
-		IS_UPDATE='n'
+		if [[ "${ALL_Y}" = "n" ]]; then
+			local IS_UPDATE
+			IS_UPDATE='n'
 
-		if [[ "${ALL_Y}" = 'n' ]]; then
-			read -e -n 1 -r -p "do you need to update to the expected version? (y/n)" IS_UPDATE
-			if [[ "${IS_UPDATE}" = 'n' ]]; then
+			read -e -n 1 -r -p "do you need to change to the expected version? (y/n)" IS_UPDATE
+			if [[ "${IS_UPDATE}" = "n" ]]; then
 				exit 0
 			fi
 		fi
