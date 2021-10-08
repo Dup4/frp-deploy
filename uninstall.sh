@@ -54,7 +54,7 @@ uninstall() {
 	local IS_DELETE_CONFIGURATION_FILE
 	IS_DELETE_CONFIGURATION_FILE='n'
 
-	if [[ "${ALL_Y}" = 'n' ]]; then
+	if [[ "${ALL_Y}" = "n" ]]; then
 		read -e -n 1 -r -p "need to delete the configuration file? (y/n)" IS_DELETE_CONFIGURATION_FILE
 	fi
 
