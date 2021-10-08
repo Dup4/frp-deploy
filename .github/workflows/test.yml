@@ -24,4 +24,4 @@ jobs:
 
       - name: Unit Test
         run: |
-            ./run-tests.sh
+            bash ./run-tests.sh
