@@ -26,7 +26,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: deploy
+          BRANCH: release
           FOLDER: output
           CLEAN: true
 
