@@ -26,7 +26,9 @@ cd "${TOP_DIR}" || exit 1
 for file in tests/*_test.sh; do
 	INFO "Running $file"
 
-	if "$(bash "${file}")" -ne 0; then
+	bash "${file}"
+
+	if [[ $? -ne 0 ]]; then
 		ERROR "Exec $file failed"
 		exit 1
 	fi
