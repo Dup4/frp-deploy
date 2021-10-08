@@ -19,25 +19,39 @@ function ERROR() {
 	echo -e "\033[0;31m$(get_now_time) [ERROR]: $*\033[0m"
 }
 
-# Check if user is root
 check_root() {
-	sudo su
+	is_root='y'
 	if [[ $EUID -ne 0 ]]; then
-		ERROR "${ERROR_MSG_MUST_ROOT}"
-		exit 1
+		is_root='n'
 	fi
 }
 
-uninstall_frpc() {
-	sudo systemctl stop frpc
-	sudo systemctl disable frpc
-	sudo systemctl daemon-reload
+uninstall() {
+	PACKAGE="${1}"
 
-	if [[ -x "/usr/bin/frpc" ]]; then
-		rm -rf "/usr/bin/frpc"
+	if [[ "${is_root}" = "y" ]]; then
+		systemctl stop "${PACKAGE}"
+		systemctl disable "${PACKAGE}"
+		systemctl daemon-reload
+
+		if [[ -f /lib/systemd/system/"${PACKAGE}".service ]]; then
+			rm -rf /lib/systemd/system/"${PACKAGE}".service
+		fi
+	else
+		systemctl --user stop "${PACKAGE}"
+		systemctl --user disable "${PACKAGE}"
+		systemctl --user daemon-reload
+
+		if [[ -f ~/.config/systemd/user/"${PACKAGE}".service ]]; then
+			rm -rf ~/.config/systemd/user/"${PACKAGE}".service
+		fi
 	fi
 
-	INFO "uninstall frpc success"
+	if [[ -x "/usr/bin/${PACKAGE}" ]]; then
+		rm -rf "/usr/bin/${PACKAGE:?}"
+	fi
+
+	INFO "uninstall ${PACKAGE} success"
 }
 
 uninstall_frps() {
@@ -66,8 +80,4 @@ fi
 
 check_root
 
-if [[ ${i} == "frpc" ]]; then
-	uninstall_frpc
-elif [[ ${i} == "frps" ]]; then
-	uninstall_frps
-fi
+uninstall "${i}"

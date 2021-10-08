@@ -31,7 +31,7 @@ for file in tests/*_test.sh; do
 		exit 1
 	fi
 
-	ERROR "Exec $file success"
+	INFO "Exec $file success"
 done
 
 INFO "All tests passed"

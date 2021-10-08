@@ -5,7 +5,6 @@ OS_DEBIAN="Debian"
 OS_UBUNTU="Ubuntu"
 OS_FEDORA="Fedora"
 
-ERROR_MSG_MUST_ROOT="This script must be run as root!"
 ERROR_MSG_SUPPORT_OS="This script only supports CentOS 6,7 or Debian or Ubuntu or Fedor!"
 ERROR_MSG_NEED_WGET="This script requires wget to run!"
 ERROR_MSG_DOWNLOAD_FAILED="download frp failed."
@@ -30,12 +29,10 @@ function ERROR() {
 	echo -e "\033[0;31m$(get_now_time) [ERROR]: $*\033[0m"
 }
 
-# Check if user is root
 check_root() {
-	sudo su
+	is_root='y'
 	if [[ $EUID -ne 0 ]]; then
-		ERROR "${ERROR_MSG_MUST_ROOT}"
-		exit 1
+		is_root='n'
 	fi
 }
 
@@ -132,50 +129,42 @@ download_frp() {
 
 	INFO "download frp from ${BINARY_PACKAGE_DOWNLOAD_URL}"
 
-	if ! wget -q "${BINARY_PACKAGE_DOWNLOAD_URL}" -O "./${BINARY_PACKAGE_NAME}"; then
+	if ! wget -q "${BINARY_PACKAGE_DOWNLOAD_URL}" -O "/tmp/${BINARY_PACKAGE_NAME}"; then
 		ERROR "${ERROR_MSG_DOWNLOAD_FAILED}"
 		exit 1
 	fi
 
-	tar zxf "./${BINARY_PACKAGE_NAME}"
+	tar -zxvf "/tmp/${BINARY_PACKAGE_NAME}" -C "/tmp/"
 
 	INFO "download frp success"
 }
 
-install_frpc() {
-	cd "./${PACKAGE_NAME}" || exit 1
+install() {
+	PACKAGE="${1}"
 
-	cp -f frps /usr/bin/frpc
+	cd "/tmp/${PACKAGE_NAME}" || exit 1
 
-	if [[ ! -f "/etc/frp/frpc.ini" ]]; then
-		cp frpc.ini /etc/frp/frpc.ini
+	cp -f frps /usr/bin/"${PACKAGE}"
+
+	if [[ ! -f "/etc/frp/${PACKAGE}.ini" ]]; then
+		cp "${PACKAGE}".ini /etc/frp/"${PACKAGE}".ini
 	fi
 
-	cp -f ./systemd/frpc.service /lib/systemd/system/frpc.service
-	sudo systemctl daemon-reload
-	sudo systemctl enable frpc
-	sudo systemctl start frpc
-
-	INFO "install frpc success"
-	INFO "you can modify frpc.ini from /etc/frp/frpc.ini"
-}
-
-install_frps() {
-	cd "./${PACKAGE_NAME}" || exit 1
-
-	cp -f frps /usr/bin/frps
-
-	if [[ ! -f "/etc/frp/frps.ini" ]]; then
-		cp frps.ini /etc/frp/frps.ini
+	if [[ ${is_root} = "y" ]]; then
+		cp -f ./systemd/"${PACKAGE}".service /lib/systemd/system/"${PACKAGE}".service
+		systemctl daemon-reload
+		systemctl enable "${PACKAGE}"
+		systemctl start "${PACKAGE}"
+	else
+		cp -f ./systemd/"${PACKAGE}".service ~/.config/systemd/user/"${PACKAGE}".service
+		systemctl --user daemon-reload
+		systemctl --user enable "${PACKAGE}"
+		systemctl --user start "${PACKAGE}"
 	fi
 
-	sudo cp -f ./systemd/frps.service /lib/systemd/system/frps.service
-	sudo systemctl daemon-reload
-	sudo systemctl enable frps
-	sudo systemctl start frps
-
-	INFO "install frps success"
-	INFO "you can modify frps.ini from /etc/frp/frps.ini"
+	INFO "install ${PACKAGE} success"
+	INFO "you can modify ${PACKAGE}.ini from /etc/frp/${PACKAGE}.ini"
+	INFO "${PACKAGE} version: $(${PACKAGE} -v)"
 }
 
 GITHUB_HOST="github.com"
@@ -209,10 +198,6 @@ check_wget
 get_latest_frp_version
 download_frp
 
-if [[ ${i} == "frpc" ]]; then
-	install_frpc
-elif [[ ${i} == "frps" ]]; then
-	install_frps
-fi
+install "${i}"
 
 clean
