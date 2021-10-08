@@ -10,7 +10,7 @@ fi
 
 "${TOP_DIR}/../uninstall.sh" -i frpc -y
 
-if [[ -z "$(which frpc)" ]]; then
+if [[ -n "$(which frpc)" ]]; then
 	exit 1
 fi
 
