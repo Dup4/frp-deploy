@@ -60,3 +60,5 @@ fi
 check_root
 
 uninstall "${i}"
+
+exit 0

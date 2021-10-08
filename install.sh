@@ -199,3 +199,5 @@ download_frp
 install "${i}"
 
 clean
+
+exit 0
