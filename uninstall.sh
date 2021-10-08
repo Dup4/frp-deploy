@@ -1,5 +1,7 @@
 #! /usr/bin/env bash
 
+ERROR_MSG_SUPPORT_INSTALL_OPTS="only support frpc or frps."
+
 function get_now_time() {
 	if [[ "$(uname)" == "Darwin" ]]; then
 		NOW_TIME=$(date)
@@ -87,6 +89,7 @@ done
 
 if [[ ${i} != "frpc" && ${i} != "frps" ]]; then
 	ERROR "${ERROR_MSG_SUPPORT_INSTALL_OPTS}"
+	exit 1
 fi
 
 check_root
