@@ -61,11 +61,11 @@ uninstall() {
 		local CONFIGURATION_FILE_PATH="${CONFIGURATION_PATH}/${PACKAGE}.ini"
 
 		if [[ -f "${CONFIGURATION_FILE_PATH}" ]]; then
-			rm -rf "${CONFIGURATION_FILE_PATH}"
+			sudo rm -rf "${CONFIGURATION_FILE_PATH}"
 		fi
 
 		if [[ -d "${CONFIGURATION_PATH}" ]]; then
-			rm -rf "${CONFIGURATION_PATH}"
+			sudo rm -rf "${CONFIGURATION_PATH}"
 		fi
 	fi
 
