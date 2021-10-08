@@ -194,6 +194,7 @@ done
 
 if [[ ${i} != "frpc" && ${i} != "frps" ]]; then
 	ERROR "${ERROR_MSG_SUPPORT_INSTALL_OPTS}"
+	exit 1
 fi
 
 check_root
