@@ -22,6 +22,7 @@ function ERROR() {
 check_root() {
 	is_root='y'
 	if [[ $EUID -ne 0 ]]; then
+		# shellcheck disable=SC2034
 		is_root='n'
 	fi
 }
@@ -29,41 +30,19 @@ check_root() {
 uninstall() {
 	PACKAGE="${1}"
 
-	if [[ "${is_root}" = "y" ]]; then
-		systemctl stop "${PACKAGE}"
-		systemctl disable "${PACKAGE}"
-		systemctl daemon-reload
+	sudo systemctl stop "${PACKAGE}"
+	sudo systemctl disable "${PACKAGE}"
+	sudo systemctl daemon-reload
 
-		if [[ -f /lib/systemd/system/"${PACKAGE}".service ]]; then
-			rm -rf /lib/systemd/system/"${PACKAGE}".service
-		fi
-	else
-		systemctl --user stop "${PACKAGE}"
-		systemctl --user disable "${PACKAGE}"
-		systemctl --user daemon-reload
-
-		if [[ -f ~/.config/systemd/user/"${PACKAGE}".service ]]; then
-			rm -rf ~/.config/systemd/user/"${PACKAGE}".service
-		fi
+	if [[ -f /lib/systemd/system/"${PACKAGE}".service ]]; then
+		sudo rm -rf /lib/systemd/system/"${PACKAGE}".service
 	fi
 
-	if [[ -x "/usr/bin/${PACKAGE}" ]]; then
-		rm -rf "/usr/bin/${PACKAGE:?}"
+	if [[ -n "$(which ${PACKAGE})" ]]; then
+		sudo rm -rf "/usr/bin/${PACKAGE:?}"
 	fi
 
 	INFO "uninstall ${PACKAGE} success"
-}
-
-uninstall_frps() {
-	sudo systemctl stop frps
-	sudo systemctl disable frps
-	sudo systemctl daemon-reload
-
-	if [[ -x "/usr/bin/frps" ]]; then
-		rm -rf "/usr/bin/frps"
-	fi
-
-	INFO "uninstall frps success"
 }
 
 while getopts ":i:" o; do

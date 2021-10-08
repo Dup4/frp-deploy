@@ -32,6 +32,7 @@ function ERROR() {
 check_root() {
 	is_root='y'
 	if [[ $EUID -ne 0 ]]; then
+		# shellcheck disable=SC2034
 		is_root='n'
 	fi
 }
@@ -146,23 +147,16 @@ install() {
 
 	cd "/tmp/${PACKAGE_NAME}" || exit 1
 
-	cp -f "${PACKAGE}" /usr/bin/"${PACKAGE}"
+	sudo cp -f "${PACKAGE}" /usr/bin/"${PACKAGE}"
 
 	if [[ ! -f "/etc/frp/${PACKAGE}.ini" ]]; then
-		cp "${PACKAGE}".ini /etc/frp/"${PACKAGE}".ini
+		sudo cp "${PACKAGE}".ini /etc/frp/"${PACKAGE}".ini
 	fi
 
-	if [[ ${is_root} = "y" ]]; then
-		cp -f ./systemd/"${PACKAGE}".service /lib/systemd/system/"${PACKAGE}".service
-		systemctl daemon-reload
-		systemctl enable "${PACKAGE}"
-		systemctl start "${PACKAGE}"
-	else
-		cp -f ./systemd/"${PACKAGE}".service ~/.config/systemd/user/"${PACKAGE}".service
-		systemctl --user daemon-reload
-		systemctl --user enable "${PACKAGE}"
-		systemctl --user start "${PACKAGE}"
-	fi
+	sudo cp -f ./systemd/"${PACKAGE}".service /lib/systemd/system/"${PACKAGE}".service
+	sudo systemctl daemon-reload
+	sudo systemctl enable "${PACKAGE}"
+	sudo systemctl start "${PACKAGE}"
 
 	INFO "install ${PACKAGE} success"
 	INFO "you can modify ${PACKAGE}.ini from /etc/frp/${PACKAGE}.ini"
