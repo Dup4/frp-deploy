@@ -99,7 +99,7 @@ check_centos_version() {
 }
 
 check_wget() {
-	if [[ ! -x "wget" ]]; then
+	if [ -n "$(which wget)" ]; then
 		ERROR "${ERROR_MSG_NEED_WGET}"
 		exit 1
 	fi
