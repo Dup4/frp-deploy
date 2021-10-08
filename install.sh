@@ -220,7 +220,7 @@ while getopts ":p:v:y:i:" o; do
 done
 
 if [[ ${i} != "frpc" && ${i} != "frps" ]]; then
-	ERROR "${ERROR_MSG_SUPPORT_INSTALL_OPTS}"
+	ERROR "${ERROR_MSG_SUPPORT_INSTALL_OPTS} not support ${i}"
 	exit 1
 fi
 
