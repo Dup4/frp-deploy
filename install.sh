@@ -202,7 +202,7 @@ DOWNLOAD_URL="https://${GITHUB_HOST}/fatedier/frp/releases/download"
 FRP_VERSION="LATEST"
 ALL_Y='n'
 
-while getopts ":p:v:y:i:" o; do
+while getopts "p:v:i:y" o; do
 	case "${o}" in
 	p)
 		GITHUB_HOST=${OPTARG}

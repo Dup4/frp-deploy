@@ -74,7 +74,7 @@ uninstall() {
 
 ALL_Y='n'
 
-while getopts ":i:y:" o; do
+while getopts ":i:y" o; do
 	case "${o}" in
 	y)
 		ALL_Y='y'
