@@ -8,7 +8,7 @@ if [[ -z "$(which frpc)" ]]; then
 	exit 1
 fi
 
-if [[ "$(which frpc)" != "0.37.0" ]]; then
+if [[ "$(frpc -v)" != "0.37.0" ]]; then
 	exit 1
 fi
 
@@ -18,7 +18,7 @@ if [[ -z "$(which frpc)" ]]; then
 	exit 1
 fi
 
-if [[ "$(which frpc)" == "0.37.0" ]]; then
+if [[ "$(frpc -v)" == "0.37.0" ]]; then
 	exit 1
 fi
 
