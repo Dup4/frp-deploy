@@ -121,7 +121,9 @@ clean() {
 }
 
 download_frp() {
-	PACKAGE_NAME="frp_${FRP_LATEST_VERSION:1}_${OS}_${ARCHS}"
+	OS_PLATFORM="linux"
+
+	PACKAGE_NAME="frp_${FRP_LATEST_VERSION:1}_${OS_PLATFORM}_${ARCHS}"
 	BINARY_PACKAGE_NAME="${PACKAGE_NAME}.tar.gz"
 	BINARY_PACKAGE_DOWNLOAD_URL="${DOWNLOAD_URL}/${FRP_LATEST_VERSION}/${BINARY_PACKAGE_NAME}"
 
@@ -192,6 +194,8 @@ check_os
 if [[ ${OS} = "${OS_CENTOS}" ]]; then
 	check_centos_version
 fi
+
+check_os_bit
 
 check_wget
 
