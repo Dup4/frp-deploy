@@ -1,5 +1,7 @@
 # frp-deploy
 
+[![Test](https://github.com/Dup4/frp-deploy/actions/workflows/test.yml/badge.svg)](https://github.com/Dup4/frp-deploy/actions/workflows/test.yml)
+
 ## Usage
 
 ### Install
