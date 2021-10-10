@@ -58,16 +58,16 @@ check_os_bit() {
 	ARCHS=""
 
 	case "$(uname -i)" in
-	x86)
+	x86 | i*86)
 		ARCHS="386"
 		;;
 	x86_64)
 		ARCHS="amd64"
 		;;
-	aarch | aarch32)
+	aarch | aarch32 | arm)
 		ARCHS="arm"
 		;;
-	aarch64)
+	aarch64 | armv8)
 		ARCHS="arm64"
 		;;
 	mips)
@@ -75,6 +75,9 @@ check_os_bit() {
 		;;
 	mips64)
 		ARCHS="mips64"
+		;;
+	mips64le)
+		ARCHS="mips64le"
 		;;
 	*)
 		ERROR "$(uname -i) is unsupport"
