@@ -1,6 +1,8 @@
 # frp-deploy
 
-[![Test](https://github.com/Dup4/frp-deploy/actions/workflows/test.yml/badge.svg)](https://github.com/Dup4/frp-deploy/actions/workflows/test.yml)
+[![Build Status](https://img.shields.io/github/workflow/status/Dup4/frp-deploy/Test?style=flat-square)](https://github.com/Dup4/frp-deploy/actions?query=workflow%3ACI)
+[![License](https://img.shields.io/github/license/Dup4/frp-deploy?style=flat-square)](LICENSE)
+[![jsDelivr](https://data.jsdelivr.com/v1/package/gh/Dup4/frp-deploy/badge)](https://www.jsdelivr.com/package/gh/Dup4/frp-deploy)
 
 ## Usage
 
