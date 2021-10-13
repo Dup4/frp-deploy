@@ -57,8 +57,10 @@ check_os() {
 check_os_bit() {
 	ARCHS=""
 
-	case "$(uname -i)" in
-	x86 | i*86)
+	local arch
+	arch="$(uname -m)"
+	case "${arch}" in
+	x86 | i386 | i686)
 		ARCHS="386"
 		;;
 	x86_64)
@@ -69,6 +71,9 @@ check_os_bit() {
 		;;
 	aarch64 | armv8)
 		ARCHS="arm64"
+		;;
+	armv*)
+		ARCHS="armv6"
 		;;
 	mips)
 		ARCHS="mips"
